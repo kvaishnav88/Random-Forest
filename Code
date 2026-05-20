@@ -1,0 +1,107 @@
+## Import library
+# For data manipulation
+import numpy as np
+import pandas as pd
+
+# Import RandomForestClassifier and accuracy_score functions from sklearn
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+
+import warnings
+warnings.filterwarnings("ignore")
+
+# Import Data
+# We will read the daily data of stock, Bank of America, to create features.
+
+# The data is stored in the directory 'data'
+path = '../data/'
+​
+# Read stock data from csv file
+df = pd.read_csv(path + 'SPY.csv', index_col=0)
+df.index = pd.to_datetime(df.index)
+df.head()
+df.tail()
+
+#Independent Variables
+#We will create independent variables which consist of 4 features. The features are:
+
+#Ratio of open and close price
+#Ratio of high and low price
+#1-day lag returns
+#2-day lag returns
+# Create input features
+​
+df['return'] = df['Close'].pct_change()
+df['Open/Close'] = (df['Open'] / df['Close'])
+df['High/Low'] = (df['High'] / df['Low'])
+df['1_day_lag_returns'] = df['return'].shift(1)
+df['2_day_lag_returns'] = df['return'].shift(2)
+​
+# Drop NaN values
+df.dropna(inplace=True)
+​
+# Store the features in a variable X
+X = df[['Open/Close', 'High/Low','1_day_lag_returns','2_day_lag_returns']]
+X.head()
+
+#Dependent Variable
+#When the next day's close price is greater than today's close price, we use 1 as a signal and else use -1. We will store this in the variable y, which is the dependent/target variable.
+
+y = np.where(df['Close'].shift(-1) > df['Close'], 1, -1)
+y[:10]
+array([ 1,  1,  1,  1, -1, -1,  1,  1,  1,  1])
+
+#Split the Dataset
+#We will split the dataset into train and test samples. The train data consists of 75% of the total datasets. On the remaining, we will test the accuracy of the model.
+
+# Training dataset length
+split = int(len(df) * 0.75)
+​
+# Splitting the X and y into train and test datasets
+X_train, X_test = X[:split], X[split:]
+y_train, y_test = y[:split], y[split:]
+
+#Train the Model
+#We will use the RandomForestClassifier function from sklearn to train and fit the model. The syntax of the followinf function is as follows:
+
+RandomForestClassifier()
+Parameters:
+
+#1. random_state (Make it any constant value to produce same results)
+#Returns:
+
+#1. Predicting the test dataset
+# Create and fit the model on train dataset
+clf = RandomForestClassifier(random_state=5)
+model = clf.fit(X_train, y_train)
+
+#Accuracy Score
+#The model is trained on the training dataset. Now it's time to test the accuracy of the model on the test dataset. We will use accuracy_score function to test the accuracy.The syntax of the followinf function is as follows:
+
+accuracy_score()
+Parameters:
+
+#1. y_test
+#2. Predicted y_test
+#2. Normalization parameter
+#Returns:
+
+#1. Prediction accuracy
+print('Prediction Accuracy (%): ', round(accuracy_score(y_test, model.predict(X_test), normalize=True)*100.0,2))
+#Prediction Accuracy (%):  59.0
+#This is a very simple model with an accuracy of around 57.58% on the test dataset.
+
+#Conclusion
+#In this notebook, we learnt the functioning of the Random Forest Algorithm with the help of an example, along with the 
+# Python code to implement this strategy.
+
+
+
+
+
+
+
+
+
+
+
