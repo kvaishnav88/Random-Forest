@@ -92,7 +92,7 @@ print('Prediction Accuracy (%): ', round(accuracy_score(y_test, model.predict(X_
 #This is a very simple model with an accuracy of around 57.58% on the test dataset.
 
 #Conclusion
-#In this notebook, we learnt the functioning of the Random Forest Algorithm with the help of an example, along with the 
+#we learnt the functioning of the Random Forest Algorithm with the help of an example, along with the 
 # Python code to implement this strategy.
 
 
